@@ -23,7 +23,14 @@
             </a>
 
             <span>
-              <select name="status" ngModel="ALL" class="btn btn-info" style="height: 32.91px;">
+              <!--
+                event:
+                event here is simply the value (ALL / SERVER_UP / SERVER_DOWN) that we select. 
+
+                ngModel:
+                ngModel is the default value.
+              -->
+              <select (ngModelChange)="filterServers($event)" [ngModel]="Status.ALL" name="status" class="btn btn-info" style="height: 32.91px;">
                 <option value="ALL">ALL</option>
                 <option value="SERVER_UP">SERVER UP</option>
                 <option value="SERVER_DOWN">SERVER DOWN</option>
