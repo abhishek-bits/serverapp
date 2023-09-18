@@ -9,3 +9,9 @@ ng g service service/server
 - `server` is the name of the service class.
 
 This command will create the main file as well as the test file.
+
+---
+
+To mark an observable, write the variable name and append `$` sign at the end.
+
+Example: `servers$`
