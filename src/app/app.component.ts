@@ -23,26 +23,26 @@ export class AppComponent implements OnInit {
 
   title = 'serverapp';
 
-  constructor(private serverService: ServerService) {}
+  constructor(private serverService: ServerService) { }
 
   // Lifecycle Hook
   ngOnInit(): void {
     this.appState$ = this.serverService.servers$
-    .pipe(
-      // If we get the response, then our data is in loaded state.
-      map(response => {
-        return { dataState: DataState.LOADED_STATE, appData: response }
-      }),
-      // But while we are making the request to the backend,
-      // we are going to return this observable.
-      startWith({ dataState: DataState.LOADING_STATE }),
-      // OR if we get an error:
-      // The catchError method internally gives call to handleError
-      // which returns us a message of type string
-      catchError((error: string) => {
-        // of() is used to create an observable on the fly
-        return of({ dataState: DataState.ERROR_STATE, error: error })
-      })
-    );
+      .pipe(
+        // If we get the response, then our data is in loaded state.
+        map(response => {
+          return { dataState: DataState.LOADED_STATE, appData: response }
+        }),
+        // But while we are making the request to the backend,
+        // we are going to return this observable.
+        startWith({ dataState: DataState.LOADING_STATE }),
+        // OR if we get an error:
+        // The catchError method internally gives call to handleError
+        // which returns us a message of type string
+        catchError((error: string) => {
+          // of() is used to create an observable on the fly
+          return of({ dataState: DataState.ERROR_STATE, error: error })
+        })
+      );
   }
 }

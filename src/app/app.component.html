@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div>
+    <!-- Subscribe to the observable -->
+    <!--
+      With the async pipe,
+      subscribe to the observable: appState$
+      and whenever we get the data, we should
+      display it in the JSON format. 
+    -->
+    {{ appState$ | async | json }}
+  </div>
+</body>
+</html>
