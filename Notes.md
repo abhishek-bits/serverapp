@@ -15,3 +15,10 @@ This command will create the main file as well as the test file.
 To mark an observable, write the variable name and append `$` sign at the end.
 
 Example: `servers$`
+
+To integrate notification functionality into our angular application: 
+
+- [angular-notifier](https://www.npmjs.com/package/angular-notifier)
+- Install angular-notifier: `npm install angular-notifier`
+
+
