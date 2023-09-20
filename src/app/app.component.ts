@@ -185,4 +185,60 @@ export class AppComponent implements OnInit {
         })
       );
   }
+
+  deleteServer(server: Server): void {
+    // Call to backend requires only the id of the server
+    this.appState$ = this.serverService.delete$(server.id)
+      .pipe(
+        map(response => {
+          this.dataSubject.next(
+            {
+              // What do we want to return ?
+              // Everything that we got in the response
+              ...response,
+              // Which property do we want to update ?
+              data: { 
+                // we need all the servers
+                // except the one we just deleted.
+                servers: this.dataSubject.value.data.servers
+                  .filter(otherServer => otherServer.id !== server.id) 
+              }
+            }
+          );
+          return { dataState: DataState.LOADED_STATE, appData: this.dataSubject.value }
+        }),
+        startWith({ dataState: DataState.LOADED_STATE, appData: this.dataSubject.value }),
+        catchError((error: string) => {
+          return of({ dataState: DataState.ERROR_STATE, error });
+        })
+      );
+  }
+
+  // printReport() doesn't make any call to Backend API
+  printReport(): void {
+    // saveAsExcel();
+    saveAsPdf();
+  }
+}
+
+function saveAsPdf(): void {
+  window.print();
+}
+
+function saveAsExcel(): void {
+  let dataType = 'application/vnd.ms-excel.sheet.macroEnabled.12';
+  let tableSelect = document.getElementById("servers");
+  // Replace all space with the URL encoded value
+  let tableHtml = tableSelect.outerHTML.replace(/ /g, '%20');
+  // Create an achor tag that will be clicked only programmatically.
+  let downloadLink = document.createElement('a');
+  // Now, integrate this achor tag into the HTML.
+  document.body.appendChild(downloadLink);
+  // add href argument to the anchor tag
+  downloadLink.href = 'data: ' + dataType + ', ' + tableHtml;
+  // give a name to the file.
+  downloadLink.download = 'server-report.xls';
+  downloadLink.click();
+  // Now, remove this anchor tag from the HTML.
+  document.body.removeChild(downloadLink);
 }

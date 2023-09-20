@@ -15,7 +15,7 @@
             <h2>Manage Servers</h2>
           </div>
           <div class="col-sm-6">
-            <button type="button" class="btn btn-primary">Print Report</button>
+            <button (click)="printReport()" type="button" class="btn btn-primary">Print Report</button>
 
             <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal">
               <i class="material-icons">&#xE147;</i>
@@ -69,7 +69,11 @@
                 <th>Actions</th>
               </tr>
             </thead>
-            <!-- loop over all the existing servers -->
+            <!-- 
+              loop over all the existing servers 
+              local variable "server" can be used to
+              refer to the current server object's properties
+            -->
             <tbody *ngFor="let server of appState.appData.data.servers; let i = index">
               <tr>
                 <!-- either the image url or the alternate text will be displayed -->
@@ -111,7 +115,7 @@
                   </a>
                 </td>
                 <td>
-                  <a class="delete" data-toggle="modal" style="cursor: pointer;">
+                  <a (click)="deleteServer(server)" class="delete" data-toggle="modal" style="cursor: pointer;">
                     <i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
                   </a>
                 </td>
