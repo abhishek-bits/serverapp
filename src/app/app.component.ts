@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ServerService } from './service/server.service';
 import { BehaviorSubject, Observable, catchError, map, of, startWith } from 'rxjs';
 import { AppState } from './interface/app-state';
@@ -12,7 +12,8 @@ import { MyNotifierService } from './service/notifier.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 /*
@@ -49,8 +50,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     private serverService: ServerService,
-    private notifierService: MyNotifierService
-    ) { }
+    private notifierService: MyNotifierService) { }
 
   // Lifecycle Hook
   // ngOnInit() is called whenever we request a resource.

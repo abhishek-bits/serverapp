@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core'
 import { NotifierService } from 'angular-notifier';
-import { MessageType } from '../enum/message-type.enum';
 
 @Injectable({ providedIn: 'root' })
 export class MyNotifierService {
@@ -30,4 +29,12 @@ export class MyNotifierService {
     onError(message: string): void {
         this.notifierService.notify(MessageType.ERROR, message);
     }
+}
+
+export enum MessageType {
+    DEFAULT = 'default',
+    INFO = 'info',
+    SUCCESS = 'success',
+    WARNING = 'warning',
+    ERROR = 'error'
 }
