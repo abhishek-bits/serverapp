@@ -7,6 +7,7 @@ import { DataState } from './enum/data-state.enum';
 import { Status } from './enum/status.enum';
 import { NgForm } from '@angular/forms';
 import { Server } from './interface/server';
+import { MyNotifierService } from './service/notifier.service';
 
 @Component({
   selector: 'app-root',
@@ -46,7 +47,10 @@ export class AppComponent implements OnInit {
 
   title = 'serverapp';
 
-  constructor(private serverService: ServerService) { }
+  constructor(
+    private serverService: ServerService,
+    private notifierService: MyNotifierService
+    ) { }
 
   // Lifecycle Hook
   // ngOnInit() is called whenever we request a resource.
@@ -57,6 +61,9 @@ export class AppComponent implements OnInit {
         map(response => {
           // save the response inside dataSubject
           this.dataSubject.next(response);
+
+          this.notifierService.onDefault(response.message);
+
           return { 
             dataState: DataState.LOADED_STATE, 
             // if we want the response to be in some sorted order.
@@ -71,6 +78,9 @@ export class AppComponent implements OnInit {
         // The catchError method internally gives call to handleError
         // which returns us a message of type string
         catchError((error: string) => {
+
+          this.notifierService.onError(error);
+
           // of() is used to create an observable on the fly
           return of({ dataState: DataState.ERROR_STATE, error: error })
         })
@@ -101,6 +111,9 @@ export class AppComponent implements OnInit {
           // reset the behavioral: filterSubject
           // actually, this stops the spinner from spinning.
           this.filterSubject.next('');
+
+          this.notifierService.onDefault(response.message);
+
           // then pass the same value we just updated.
           return { dataState: DataState.LOADED_STATE, appData: this.dataSubject.value }
         }),
@@ -113,6 +126,9 @@ export class AppComponent implements OnInit {
           // reset the behavioral: filterSubject
           // actually, this stops the spinner from spinning.
           this.filterSubject.next('');
+
+          this.notifierService.onError(error);
+
           return of({ dataState: DataState.ERROR_STATE, error })
         })
       );
@@ -123,10 +139,16 @@ export class AppComponent implements OnInit {
       .pipe(
         // Here, we'll send the filtered response that comes from the backend.
         map(response => {
+
+          this.notifierService.onDefault(response.message);
+
           return { dataState: DataState.LOADED_STATE, appData: response }
         }),
         startWith({ dataState: DataState.LOADED_STATE, appData: this.dataSubject.value }),
         catchError((error: string) => {
+
+          this.notifierService.onError(error);
+
           return of({ dataState: DataState.ERROR_STATE, error })
         })
       );
@@ -170,6 +192,8 @@ export class AppComponent implements OnInit {
           // Reset the form
           serverForm.resetForm({ status: this.Status.SERVER_DOWN })
 
+          this.notifierService.onDefault(response.message);
+
           // then pass the same value we just updated.
           return { dataState: DataState.LOADED_STATE, appData: this.dataSubject.value }
         }),
@@ -181,6 +205,9 @@ export class AppComponent implements OnInit {
         catchError(( error: string ) => {
           // Stop the spinner
           this.isLoading.next(false);
+
+          this.notifierService.onError(error);
+
           return of({ dataState: DataState.ERROR_STATE, error })
         })
       );
@@ -205,10 +232,16 @@ export class AppComponent implements OnInit {
               }
             }
           );
+
+          this.notifierService.onDefault(response.message);
+
           return { dataState: DataState.LOADED_STATE, appData: this.dataSubject.value }
         }),
         startWith({ dataState: DataState.LOADED_STATE, appData: this.dataSubject.value }),
         catchError((error: string) => {
+
+          this.notifierService.onError(error);
+
           return of({ dataState: DataState.ERROR_STATE, error });
         })
       );
@@ -216,8 +249,8 @@ export class AppComponent implements OnInit {
 
   // printReport() doesn't make any call to Backend API
   printReport(): void {
-    // saveAsExcel();
-    saveAsPdf();
+    saveAsExcel();
+    // saveAsPdf();
   }
 }
 
@@ -241,4 +274,6 @@ function saveAsExcel(): void {
   downloadLink.click();
   // Now, remove this anchor tag from the HTML.
   document.body.removeChild(downloadLink);
+
+  this.notifierService.onDefault('Report Downloaded');
 }
