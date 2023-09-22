@@ -184,9 +184,13 @@ export class AppComponent implements OnInit {
           );
 
           // Close the Modal
+          // Otherwise, the popup that allows us to create new server
+          // will have to be manually closed. (Annoying!)
           document.getElementById('closeModal').click();
 
           // Stop the spinner
+          // We don't want the spinner to be spinning
+          // when the server has already responded.
           this.isLoading.next(false);
 
           // Reset the form
